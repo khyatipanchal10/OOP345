@@ -1,0 +1,41 @@
+Script started on Tue 30 May 2017 01:53:24 PM EDT
+kpanchal10@matrix:~/OOP345/workshops/ws1> whoami
+kpanchal10
+kpanchal10@matrix:~/OOP345/workshops/ws1> cat w1,[K.cpp
+#include <iostream>
+#include <cstring>
+#include "process.h"
+#include "CString.h"
+#define MAX 3
+
+int main(int argc, char* argv[]){
+
+  std::cout << "Command Line :";
+  for (int arg = 0; arg < argc; arg++) {
+    std::cout << " " << argv[arg];
+  }
+  std::cout << "\n";
+
+  if (argc == 1){
+    std::cout << "Insufficient number of arguments(min 1)" << std::endl;
+    return 1;
+  }
+
+  std::cout << "Maximum number of characters stored : " << 3 << std::endl;
+
+  for (int arg = 1; arg < argc; arg++)
+    process(argv[arg]);
+  return 0;
+}kpanchal10@matrix:~/OOP345/workshops/ws1> cat w1.cppwhoami[Kexit[Kw1[K oop345 btp305g++ -o w1 w1.cpp CString.cpp process.cpp
+kpanchal10@matrix:~/OOP345/workshops/ws1> g++ -o w1 w1.cpp CString.cpp process.cppcat w1.cpp[Kwhoami[Kexit[Kw1[K oop345 btp305[K oop345 btp305
+Command Line : w1 oop345 btp305
+Maximum number of characters stored : 3
+0: oop
+1: btp
+kpanchal10@matrix:~/OOP345/workshops/ws1> w1
+Command Line : w1
+Insufficient number of arguments(min 1)
+kpanchal10@matrix:~/OOP345/workshops/ws1> exit
+exit
+
+Script done on Tue 30 May 2017 01:54:10 PM EDT

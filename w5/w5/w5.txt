@@ -1,0 +1,297 @@
+Script started on Mon 22 Feb 2016 03:06:27 PM EST
+gsingh443@matrix:~/oop345/w5> exitg++ -o w5 -std=c++0x w5.cpp Notifications.cpp M.cppp Message.cpp[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ccat w5.cpp Notifications.* Message.*[K
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cwhoami[Kscript w4.txtwhoami[K
+gsingh443
+gsingh443@matrix:~/oop345/w5> whoami[Kwhoamiexit[Kg++ -o w5 -std=c++0x w5.cpp Notifications.cpp M.cppp Message.cpp[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ccat w5.cpp Notifications.* Message.*[K
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C
+// Workshop 5 - Containers
+// w5.cpp
+#include <iostream>
+#include <fstream>
+#include "Message.h"
+#include "Notifications.h"
+
+const char REC_DELIMITER = '\n';
+
+w5::Notifications collect(std::ifstream& in, char recDelim) {
+	w5::Notifications notifications;
+	do {
+		w5::Message message(in, recDelim);
+		if (!message.empty())
+		notifications += std::move(message);
+	} while(in);
+	return notifications;
+}
+
+
+int main(int argc, char* argv[]) {
+	if (argc == 1) {
+		std::cerr << argv[0] << ": missing file operand\n";
+		return 1;
+	}
+	else if (argc != 2) {
+		std::cerr << argv[0] << ": too many arguments\n";
+		return 2;
+	}
+	std::ifstream file(argv[1]);
+	if (!file) {
+		std::cerr << argv[0] << "\n: Failed to open " << argv[1] << "\n";
+		return 3;
+	}
+
+	std::cout << "\nNotifications\n=============\n\n";
+	w5::Notifications notifications = collect(file, REC_DELIMITER);
+	notifications.display(std::cout);
+	std::cout << "Press any key to continue ... ";
+	std::cin.get();
+}#include "Notifications.h"
+using namespace std;
+
+w5::Notifications::Notifications()
+{
+	noti=new char[1024];
+	num = 0;
+}
+
+w5::Notifications::~Notifications()
+{
+	if (noti != NULL)
+		delete noti;
+}
+
+w5::Notifications::Notifications(const w5::Notifications &old)
+{
+	noti = new char[1024];
+	num = old.num;
+	for (int i = 0; old.noti[i] != '\0'; i++)
+		noti[i] = old.noti[i];
+}
+
+w5::Notifications& w5::Notifications::operator=(const Notifications&old)
+{
+	if (this == &old)  
+		return *this;
+	if (noti != NULL)
+	{
+		delete []noti;
+		noti = NULL;
+	}
+	noti = new char[1024];
+	num = old.num;
+	for (int i = 0; old.noti[i] != '\0'; i++)
+		noti[i] = old.noti[i];
+	return *this;
+}
+
+
+
+
+w5::Notifications::Notifications(Notifications&& old) :noti(old.noti)
+{
+	old.noti = NULL;
+	num = old.num;
+}
+
+
+
+w5::Notifications& w5::Notifications::operator=(Notifications&& old)
+{
+	auto noti = this->noti;
+	this->noti = old.noti;
+	old.noti = noti;
+	num = old.num;
+	return *this;
+}
+
+
+void w5::Notifications::operator+=(const w5::Message&msg)
+{
+	int index=0;
+	if (num > 0)
+	{
+		noti[num] = '\n';
+		num++;
+	}
+	for (int i = 0; msg.message[i] != '\0'; i++)
+	{
+		noti[num + i] = msg.message[i];
+	}
+	num=num+msg.num;
+	noti[num] = '\0';
+}
+
+void w5::Notifications::display(std::ostream& os) const
+{
+	//for (int i = 0; noti[i] != '\0'; i++)
+		//os << noti[i] << " ";
+	os <<noti<< endl;
+}#ifndef NOTIFICATIONS_H_
+#define NOTIFICATIONS_H_
+#include "Message.h"
+
+namespace w5
+{
+	class Notifications
+	{
+	public:
+		char *noti;
+		int num;
+		Notifications();
+		Notifications(const Notifications&);
+		Notifications& operator=(const Notifications&);
+		Notifications(Notifications&&);            //move constructor
+		Notifications& operator=(Notifications&&);
+		~Notifications();
+		void operator+=(const Message&msg);
+		void display(std::ostream& os) const;
+	};
+}
+
+
+#endif#include "Message.h"
+using namespace std;
+
+char mess[] = "Message";
+char user[] = "User  : ";
+char tweet[] = "Tweet : ";
+char reply[] = "Reply : ";
+
+w5::Message::Message(std::ifstream &in, char c)
+{
+	message=new char[100];
+	char buff[100];
+	int flag1 = 0,flag2=0,index=0,index1,count;
+	num=0;
+	char temp;
+	temp=in.get();
+	while(temp!=c &&!in.eof())
+	{
+		if (temp == ' ') flag1 = 1;
+		if (temp == '@') flag2 = 1;
+		buff[index] = temp;
+		index++;
+		temp=in.get();
+	}
+	buff[index] = '\0';
+	if (flag1 == 0) return;
+	for (int i = 0; mess[i] != '\0'; i++)  //user
+	{
+		message[i] = mess[i];
+		num++;
+	}
+	message[num] = '\n';
+	num++;
+	for (count = 0; user[count] != '\0'; count++)  //user
+	{
+		message[count + num] = user[count];
+	}
+	num+=count;
+	count = 0;
+	for (index1 = 0; buff[index1] != ' '; index1++) //user name
+	{
+		count++;
+		message[num + index1] = buff[index1];
+	}
+	num = num + count;
+	message[num] = '\n';
+	num++;
+	if (flag2 == 1)
+	{
+		int i = 0;
+		for (; reply[i] != '\0'; i++)      //reply
+		{
+			message[num+i] = reply[i];
+		}
+		num = num + i;
+		index1+=2;
+		for (i = 0; buff[index1] != ' '; index1++)  //reply name
+		{
+			message[num + i] = buff[index1];
+			i++;
+		}
+		num = num + i;
+		message[num] = '\n';
+		num++;
+	}
+
+	for (index=0; tweet[index] != '\0'; index++)
+	{
+		message[num + index] = tweet[index];
+	}
+	num += index;
+	count = 0;
+	index1++;
+	for (; buff[index1] != '\0'; index1++)
+	{
+		message[num + count] = buff[index1];
+		count++;
+	}
+	num += count;
+	message[num] = '\n';
+	message[++num] = '\0';
+}
+
+bool w5::Message::empty() const
+{
+	return num==0;
+}
+
+void w5::Message::display(std::ostream &out) const
+{
+	out<<message<<endl;
+}
+
+w5::Message::~Message()
+{
+	delete []message;
+}#ifndef MESSAGE_H_
+#define MESSAGE_H_
+#include <string>
+#include <fstream>
+#include <iostream>
+
+using namespace std;
+namespace w5
+{
+	class Message
+	{
+	public:
+		char *message;
+		int num;
+		Message(std::ifstream& in,char c);
+		~Message();
+		bool empty() const;
+		void display(std::ostream&) const;
+	};
+
+}
+#endifgsingh443@matrix:~/oop345/w5> cat w5.cpp Notifications.* Message.*[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cwhoami[Kexit[Kg++ -o w5 -std=c++0x w5.cpp Notifications.cpp M.cppp Message.cppMessage.cpp[K[CMessage.cpp[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[CMessage.cpp[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[CMes[Cage.cpp[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[CMessage.cpp[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cessage.cpp[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C
+
+gsingh443@matrix:~/oop345/w5> w5 w5_test.dat
+
+Notifications
+=============
+
+Message
+User  : jim
+Tweet : Workshop 5 is cool
+
+Message
+User  : harry
+Reply : jim
+Tweet : working on workshop 5 now
+
+Message
+User  : dave
+Tweet : what the ^#$%!
+
+Message
+User  : john
+Reply : harry
+Tweet : I'm done
+
+Press any key to continue ... exi^H     
+gsingh443@matrix:~/oop345/w5> exit
+exit
+
+Script done on Mon 22 Feb 2016 03:07:30 PM EST

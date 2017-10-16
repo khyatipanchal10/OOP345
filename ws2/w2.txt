@@ -1,0 +1,41 @@
+Script started on Tue 30 May 2017 09:53:58 PM EDT
+kpanchal10@matrix:~/OOP345/workshops/ws2> whoami
+kpanchal10
+kpanchal10@matrix:~/OOP345/workshops/ws2> cat w2.cpp
+// Workshop 2 - unsigned int, Enumerations, String Class and File I/O 
+// w2.cpp
+
+#include <iostream>
+#include "Stations.h"
+
+int main(int argc, char* argv[]) {
+	std::cout << "Command Line : ";
+	for (int i = 0; i < argc; i++) {
+		std::cout << argv[i] << ' ';
+	}
+	std::cout << std::endl;
+	if (argc != 2) {
+		std::cerr << "\nIncorrect number of arguments\n";
+		return 1;
+	}
+	w2::Stations stations(argv[1]);
+	std::cout << std::endl;
+	stations.update();
+	stations.restock();
+	stations.report();
+
+	return 0;
+}
+kpanchal10@matrix:~/OOP345/workshops/ws2> cat w2.cppwhoami[Kcd ws1ls[Kcd  workshopsls[Kcd OOP345script w1.txtls[Kscript w1.txtls[Kpico cstring.cppls[Kpico cstring.hls[Kclearg++ -o w1 w1.cpp cstring.cpp process.cppCString.cpp process.cppcstring.cpp process.cpp[C[C.cpp[K.cpp[K.cpp[K.cpp[K.cpp[K.cpp[K.cpp[K.cpp[K .cppS.cppt.cppa.cppt.cppi.cppo.cppn.cpp.cpp Station.cpp[K.cpp Station.cpp[K.cpp Station.cpp[K.cpp Station.cpp[K.cpp Station.cpp[K.cpp Station.cpp[K.cpp Station.cpp[KS.cpp Station.cppt.cpp Station.cppa.cpp Station.cppt.cpp Station.cppi.cpp Station.cppo.cpp Station.cppn.cpp Station.cpps.cpp Station.cpp.cpp Stations.cpp Station.cpp[K2.cpp Stations.cpp Station.cpp w2.cpp Stations.cpp Station.cpp[K2 w2.cpp Stations.cpp Station.cpp
+kpanchal10@matrix:~/OOP345/workshops/ws2> g++ -o w2 w2.cpp Stations.cpp Station.cppcat w2.cpp[Kwhoami[Kcd ws1ls[Kcd  workshopsls[Kcd OOP345script w1.txtls[Kscript w1.txtls[Kpico cstring.cppls[Kpico cstring.hls[Kclearg++ -o w1 w1.cpp cstring.cpp process.cppCString.cpp process.cppcstring.cpp process.cppls[Kg++ -o w1 w1.cpp CString.cpp process.cppclear[Kws1[K oop345 1[K1 oop345ls[Kcd ws1ls[Kcd workshopsls[Kcd OOP345ls[Kexitw1[K oop345 btp305 oop345 btp305[K2 oop345 btp305
+Command Line : w2 oop345 btp305 
+
+Incorrect number of arguments
+kpanchal10@matrix:~/OOP345/workshops/ws2> w2 oop345 btp305g++ -o w2 w2.cpp Stations.cpp Station.cppcat w2.cpp[Kwhoami[K[K[K[K[K[K[Kw2
+Command Line : w2 
+
+Incorrect number of arguments
+kpanchal10@matrix:~/OOP345/workshops/ws2> exit
+exit
+
+Script done on Tue 30 May 2017 09:55:42 PM EDT
